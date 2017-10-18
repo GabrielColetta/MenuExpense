@@ -12,5 +12,10 @@ namespace Menu.Domain.Entities
         public string Telephone { get; set; }
         
         public virtual ICollection<IngredientDistributor> Ingredients { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

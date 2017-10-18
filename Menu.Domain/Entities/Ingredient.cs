@@ -19,5 +19,10 @@ namespace Menu.Domain.Entities
         public virtual Price Price { get; set; }
         
         public virtual ICollection<IngredientDistributor> Distributors { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Menu.Domain.Enum;
+﻿using System.Collections.Generic;
+using Menu.Domain.Enum;
 
 namespace Menu.Domain.Entities
 {
@@ -12,5 +13,10 @@ namespace Menu.Domain.Entities
         public virtual Consolidation Consolidation { get; set; }
         public virtual ProductionInput ProductionInput { get; set; }
         public virtual Recipe Recipe { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

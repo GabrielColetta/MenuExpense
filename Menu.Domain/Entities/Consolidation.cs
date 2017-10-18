@@ -15,5 +15,10 @@ namespace Menu.Domain.Entities
         public long ProductInputId { get; set; }
         public virtual ProductionInput ProductionInput { get; set; }
         public virtual ICollection<Ingredient> Ingredients { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Menu.Domain.Entities
+﻿using System.Collections.Generic;
+
+namespace Menu.Domain.Entities
 {
     public class Price : EntityBase
     {
@@ -8,5 +10,10 @@
 
         public virtual Ingredient Ingredient { get; set; }
         public virtual Recipe Recipe { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

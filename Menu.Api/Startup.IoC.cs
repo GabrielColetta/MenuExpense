@@ -1,4 +1,5 @@
-﻿using Menu.Application;
+﻿using AspNetCoreRateLimit;
+using Menu.Application;
 using Menu.Data.Context;
 using Menu.Domain.Contracts;
 using Menu.Domain.Contracts.Application;
@@ -10,10 +11,14 @@ namespace Menu.Api
     {
         private void ApplicationService(IServiceCollection services)
         {
-            //Contexto.
+            //CONTEXTO
             services.AddTransient<IMenuContext, MenuContext>();
 
-            //Serviços.
+            //COMPONENTES.
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+            //SERVIÇOS
             services.AddTransient<IIngredientApplication, IngredientApplication>();
         }
     }

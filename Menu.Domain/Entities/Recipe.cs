@@ -20,5 +20,10 @@ namespace Menu.Domain.Entities
         public virtual Cook Cook { get; set; }
 
         public virtual ICollection<ProductionInput> ProductionInputs { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -5,9 +5,9 @@ using Menu.Domain.Dto;
 
 namespace Menu.Application
 {
-    public class IngredientApplication : ApplicationBase<IngredientModel, Ingredient>, IIngredientApplication
+    class CookApplication : ApplicationBase<CookModel, Cook>, ICookApplication
     {
-        public IngredientApplication(IMenuContext context)
+        public CookApplication(IMenuContext context)
             : base(context)
         {
         }

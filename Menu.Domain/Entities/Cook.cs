@@ -9,5 +9,10 @@ namespace Menu.Domain.Entities
         public string Cpf { get; set; }
 
         public virtual ICollection<Recipe> Recipes { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

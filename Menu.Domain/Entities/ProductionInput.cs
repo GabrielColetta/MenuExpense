@@ -10,5 +10,10 @@ namespace Menu.Domain.Entities
         public virtual Weight TotalWeight { get; set; }
 
         public virtual ICollection<Consolidation> Consolidations { get; set; }
+
+        public override bool Validate(IEnumerable<string> errors)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

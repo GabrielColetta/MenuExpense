@@ -1,27 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Menu.Domain.Contracts.Application;
-using Menu.Domain.Dto;
+﻿using Menu.Domain.Contracts.Application;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Menu.Domain.Dto;
 
 namespace Menu.Api.Controllers
 {
     [Produces("application/json")]
-    [Route("api/ingredients")]
-    public class IngredientController : Controller
+    [Route("api/Cooks")]
+    public class CookController : Controller
     {
-        public IngredientController(IIngredientApplication ingredientApplication)
+        public CookController(ICookApplication cookApplication)
         {
-            _ingredientApplication = ingredientApplication;
+            _cookApplication = cookApplication;
         }
 
-        private readonly IIngredientApplication _ingredientApplication;
+        private readonly ICookApplication _cookApplication;
 
         [HttpGet]
         public IActionResult GetPagination(int page)
         {
             try
             {
-                var result = _ingredientApplication.GetPaginated(page);
+                var result = _cookApplication.GetPaginated(page);
                 return Ok(result);
             }
             catch (Exceptions.Handlers.ApplicationException ex)
@@ -42,7 +42,7 @@ namespace Menu.Api.Controllers
         {
             try
             {
-                var result = _ingredientApplication.GetById(id);
+                var result = _cookApplication.GetById(id);
                 return Ok(result);
             }
             catch (Exceptions.Handlers.ApplicationException ex)
@@ -59,11 +59,11 @@ namespace Menu.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(IngredientModel model)
+        public IActionResult Create(CookModel model)
         {
             try
             {
-                _ingredientApplication.Create(model);
+                _cookApplication.Create(model);
                 return Ok();
             }
             catch (Exceptions.Handlers.ApplicationException ex)
@@ -77,7 +77,7 @@ namespace Menu.Api.Controllers
         {
             try
             {
-                _ingredientApplication.Delete(id);
+                _cookApplication.Delete(id);
                 return Ok();
             }
             catch (Exceptions.Handlers.ApplicationException ex)
