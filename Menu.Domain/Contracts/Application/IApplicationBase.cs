@@ -10,7 +10,9 @@ namespace Menu.Domain.Contracts.Application
     {
         void Create(TEntityModel model);
         void Delete(long id);
-        TEntityModel GetById(long id, Expression<Func<TEntity, TEntityModel>> parameters = null);
-        IEnumerable<TEntityModel> GetPaginated(int page, Expression<Func<TEntity, TEntityModel>> parameters = null);
+        TEntityModel GetById(long id);
+        TEntityModel GetById(long id, Expression<Func<TEntity, TEntityModel>> parameters);
+        IEnumerable<TEntityModel> GetPaginated(int page);
+        IEnumerable<TEntityModel> GetPaginated(int page, Expression<Func<TEntity, TEntityModel>> parameters);
     }
 }

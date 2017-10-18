@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Menu.Domain.Dto;
+using Menu.Exceptions.Handlers;
 
 namespace Menu.Api.Controllers
 {
@@ -24,7 +25,7 @@ namespace Menu.Api.Controllers
                 var result = _cookApplication.GetPaginated(page);
                 return Ok(result);
             }
-            catch (Exceptions.Handlers.ApplicationException ex)
+            catch (BusinessException ex)
             {
                 if (ex.statusCode.StatusCode == StatusCodes.Status404NotFound)
                 {
@@ -45,7 +46,7 @@ namespace Menu.Api.Controllers
                 var result = _cookApplication.GetById(id);
                 return Ok(result);
             }
-            catch (Exceptions.Handlers.ApplicationException ex)
+            catch (BusinessException ex)
             {
                 if (ex.statusCode.StatusCode == StatusCodes.Status404NotFound)
                 {
@@ -66,7 +67,7 @@ namespace Menu.Api.Controllers
                 _cookApplication.Create(model);
                 return Ok();
             }
-            catch (Exceptions.Handlers.ApplicationException ex)
+            catch (BusinessException ex)
             {
                 return BadRequest(ex);
             }
@@ -80,7 +81,7 @@ namespace Menu.Api.Controllers
                 _cookApplication.Delete(id);
                 return Ok();
             }
-            catch (Exceptions.Handlers.ApplicationException ex)
+            catch (BusinessException ex)
             {
                 return BadRequest(ex);
             }

@@ -1,5 +1,6 @@
 ﻿using Menu.AutoMapper;
 using Menu.Domain.Contracts;
+using Menu.Exceptions.Handlers;
 using Menu.Resources.ResourcesFile;
 using System;
 using System.Collections.Generic;
@@ -51,21 +52,16 @@ namespace Menu.Application
                 }
                 else
                 {
-                    throw new ApplicationException();
+                    throw new BusinessException(string.Format(_entityName, ErrorMessage.NotValid));
                 }
             }
         }
-        
-        //public virtual void Update(TEntityModel model)
-        //{
-        //    if (model != null)
-        //    {
-        //        bool isValid = ValidateExistingEntity(model);
-        //        if (isValid)
-        //        {
-        //        }
-        //    }
-        //}
+
+        public virtual void Update(TEntityModel model)
+        {
+
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Método base para exclusão de uma entidade.
@@ -92,29 +88,60 @@ namespace Menu.Application
         /// Método base para encontrar entidade por id.
         /// </summary>
         /// <param name="id">Identificador da entidade.</param>
-        /// <param name="parameters">Itens a ser filtrado no select.</param>
-        /// <returns></returns>
-        public virtual TEntityModel GetById(long id, Expression<Func<TEntity, TEntityModel>> parameters = null)
+        /// <returns>Retorna a entidade.</returns>
+        public virtual TEntityModel GetById(long id)
         {
-            TEntityModel result = default(TEntityModel);
-            if (parameters != null)
-            {
-                result = _context.Set<TEntity>()
-                    .Where(item => item.Id == id)
-                    .Select(parameters)
-                    .FirstOrDefault();
-            }
-            else
-            {
-                var initialResult = _context.Set<TEntity>()
-                    .Where(item => item.Id == id)
-                    .Select(item => item)
-                    .FirstOrDefault();
+            TEntity result = _context.Set<TEntity>()
+                .Where(item => item.Id == id)
+                .FirstOrDefault();
 
-                result = MapToModel(initialResult);
+            if (result != null)
+            {
+                return MapToModel(result);
             }
+            throw new BusinessException(string.Format(_entityName, ErrorMessage.NotFound, 404));
+        }
 
-            return result;
+        /// <summary>
+        /// Método base para encontrar entidade por id.
+        /// </summary>
+        /// <param name="id">Identificador da entidade.</param>
+        /// <param name="parameters">Itens a ser filtrado no select.</param>
+        /// <returns>Retorna a entidade.</returns>
+        public virtual TEntityModel GetById(long id, Expression<Func<TEntity, TEntityModel>> parameters)
+        {
+
+            TEntityModel result = _context.Set<TEntity>()
+                .Where(item => item.Id == id)
+                .Select(parameters)
+                .FirstOrDefault();
+            if (result != null)
+            {
+                return result;
+            }
+            throw new BusinessException(string.Format(_entityName, ErrorMessage.NotFound, 404));
+        }
+
+        /// <summary>
+        /// Páginação base da entidade.
+        /// </summary>
+        /// <param name="page">Qual a página ele esta atualmente.</param>
+        /// <returns>Retorna a páginação das entidades.</returns>
+        public virtual IEnumerable<TEntityModel> GetPaginated(int page)
+        {
+            int index = page * 12;
+            ICollection<TEntity> result = _context.Set<TEntity>().Skip(index).Take(12).ToList();
+
+            if (result != null)
+            {
+                ICollection<TEntityModel> formattedResult = new List<TEntityModel>();
+                foreach (var item in result)
+                {
+                    formattedResult.Add(MapToModel(item));
+                }
+                return formattedResult;
+            }
+            throw new BusinessException(string.Format(_entityName, ErrorMessage.NotFound), 404);
         }
 
         /// <summary>
@@ -122,32 +149,17 @@ namespace Menu.Application
         /// </summary>
         /// <param name="page">Qual a página ele esta atualmente.</param>
         /// <param name="parameters">Itens a ser filtrado no select.</param>
-        /// <returns></returns>
-        public virtual IEnumerable<TEntityModel> GetPaginated(int page, Expression<Func<TEntity, TEntityModel>> parameters = null)
+        /// <returns>Retorna a páginação das entidades.</returns>
+        public virtual IEnumerable<TEntityModel> GetPaginated(int page, Expression<Func<TEntity, TEntityModel>> parameters)
         {
             int index = page * 12;
-            ICollection<TEntityModel> result = null;
-            if (parameters != null)
-            {
-                result = _context.Set<TEntity>()
-                    .Skip(index)
-                    .Take(12)
-                    .Select(parameters)
-                    .ToList();
-            }
-            else
-            {
-                var initialResult = _context.Set<TEntity>()
-                    .Skip(index)
-                    .Take(12)
-                    .ToList();
-
-                result = new List<TEntityModel>();
-                foreach (var item in initialResult)
-                {
-                    result.Add(MapToModel(item));
-                }
-            }
+            ICollection<TEntityModel> result = 
+                _context.Set<TEntity>()
+                .Skip(index)
+                .Take(12)
+                .Select(parameters)
+                .ToList();
+            
             return result;
         }
 
@@ -164,30 +176,11 @@ namespace Menu.Application
                 newEntity.Validate(_erros);
                 return _erros.Any();
             }
-            catch (ApplicationException)
+            catch (Exception)
             {
-                throw;
+                throw new MapperException(ErrorMessage.InvalidValueForMap);
             }
         }
-
-        ///// <summary>
-        ///// Validação base para entidades existêntes para ser atualizadas no banco, sobreescrever para validações especificas.
-        ///// </summary>
-        ///// <param name="object">Entidade a ser atualizada.</param>
-        ///// <returns>retorna o resultado da validação.</returns>
-        //public virtual bool ValidateExistingEntity(TEntityModel @object)
-        //{
-        //    try
-        //    {
-        //        var newEntity = MapToEntity(@object);
-        //        newEntity.Validate(_erros);
-        //        return _erros.Any();
-        //    }
-        //    catch (ApplicationException)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         protected virtual TEntityModel MapToModel(TEntity entity)
         {
@@ -195,7 +188,7 @@ namespace Menu.Application
             {
                 return MapBase<TEntityModel, TEntity>.MapEntityModel(entity);
             }
-            throw new ApplicationException();
+            throw new BusinessException(ErrorMessage.ValuesIsEmpty);
         }
 
         protected virtual TEntity MapToEntity(TEntityModel model)
@@ -204,7 +197,7 @@ namespace Menu.Application
             {
                 return MapBase<TEntityModel, TEntity>.MapEntity(model);
             }
-            throw new ApplicationException();
+            throw new BusinessException(ErrorMessage.ValuesIsEmpty);
         }
     }
 }
