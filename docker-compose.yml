@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  menu.controller:
+    image: menu.controller
+    build:
+      context: ./Menu.Controller
+      dockerfile: Dockerfile
+
+  menu.api:
+    image: menu.api
+    build:
+      context: ./Menu.Api
+      dockerfile: Dockerfile

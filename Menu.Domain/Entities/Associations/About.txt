@@ -1,0 +1,7 @@
+﻿######################################################################
+# Para a versão do Entity Framework Core 2.0 não existe ainda o rela-#
+# cionamento Many to Many automatico, por causa disso foi feito esta #
+# camada para guardar as classes da relação, a mesma será removida   #
+# quando o Entity for atualizado.                                    #
+#                                                                    #
+######################################################################
