@@ -88,6 +88,15 @@ namespace Menu.Resources.ResourcesFile {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Uma das propriedades possui um problema não conhecido!.
+        /// </summary>
+        public static string PropertyIsNotValid {
+            get {
+                return ResourceManager.GetString("PropertyIsNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Registro inserido esta vázio..
         /// </summary>
         public static string ValuesIsEmpty {

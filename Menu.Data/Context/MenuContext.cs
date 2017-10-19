@@ -1,12 +1,12 @@
 ﻿using Menu.Data.Configurations;
 using Menu.Data.Configurations.Associations;
-using Menu.Domain.Contracts;
+using Menu.Domain.Contracts.Pattern;
 using Menu.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Menu.Data.Context
 {
-    public class MenuContext : DbContext, IMenuContext
+    public class MenuContext : DbContext, IContext
     {
         public MenuContext() { }
 

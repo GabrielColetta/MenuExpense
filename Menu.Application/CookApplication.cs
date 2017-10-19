@@ -1,13 +1,13 @@
 ﻿using Menu.Domain.Contracts.Application;
 using Menu.Domain.Entities;
-using Menu.Domain.Contracts;
 using Menu.Domain.Dto;
+using Menu.Domain.Contracts.Pattern;
 
 namespace Menu.Application
 {
     class CookApplication : ApplicationBase<CookModel, Cook>, ICookApplication
     {
-        public CookApplication(IMenuContext context)
+        public CookApplication(IContext context)
             : base(context)
         {
         }

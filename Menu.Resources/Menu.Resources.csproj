@@ -5,10 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Menu.Exceptions\Menu.Exceptions.csproj" />
+    <ProjectReference Include="..\Menu.Domain\Menu.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="ResourcesFile\EntitiesNames.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>EntitiesNames.resx</DependentUpon>
+    </Compile>
+    <Compile Update="ResourcesFile\ErrorMessage.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ErrorMessage.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
@@ -16,6 +26,10 @@
     <EmbeddedResource Update="ResourcesFile\EntitiesNames.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EntitiesNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ResourcesFile\ErrorMessage.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ErrorMessage.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

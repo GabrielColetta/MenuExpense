@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Menu.Exceptions\Menu.Exceptions.csproj" />
     <ProjectReference Include="..\Menu.AutoMapper\Menu.AutoMapper.csproj" />
     <ProjectReference Include="..\Menu.Data\Menu.Data.csproj" />
     <ProjectReference Include="..\Menu.Domain\Menu.Domain.csproj" />

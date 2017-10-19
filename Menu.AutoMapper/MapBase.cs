@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Menu.Domain.Contracts;
+using Menu.Domain.Contracts.Pattern;
 
 namespace Menu.AutoMapper
 {

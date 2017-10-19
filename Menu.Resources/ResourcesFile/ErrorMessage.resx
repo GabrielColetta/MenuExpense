@@ -126,6 +126,9 @@
   <data name="NotValid" xml:space="preserve">
     <value>{0} não é uma entidade válida!</value>
   </data>
+  <data name="PropertyIsNotValid" xml:space="preserve">
+    <value>Uma das propriedades possui um problema não conhecido!</value>
+  </data>
   <data name="ValuesIsEmpty" xml:space="preserve">
     <value>Registro inserido esta vázio.</value>
   </data>

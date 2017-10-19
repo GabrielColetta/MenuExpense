@@ -1,4 +1,4 @@
-﻿using Menu.Domain.Contracts;
+﻿using Menu.Domain.Contracts.Pattern;
 using Menu.Domain.Entities;
 using System.Collections.Generic;
 

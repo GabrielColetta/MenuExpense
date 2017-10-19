@@ -3,6 +3,7 @@ using Menu.Application;
 using Menu.Data.Context;
 using Menu.Domain.Contracts;
 using Menu.Domain.Contracts.Application;
+using Menu.Domain.Contracts.Pattern;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Menu.Api
@@ -12,7 +13,7 @@ namespace Menu.Api
         private void ApplicationService(IServiceCollection services)
         {
             //CONTEXTO
-            services.AddTransient<IMenuContext, MenuContext>();
+            services.AddTransient<IContext, MenuContext>();
 
             //COMPONENTES.
             services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();

@@ -1,5 +1,6 @@
 ﻿using Menu.AutoMapper;
 using Menu.Domain.Contracts;
+using Menu.Domain.Contracts.Pattern;
 using Menu.Exceptions.Handlers;
 using Menu.Resources.ResourcesFile;
 using System;
@@ -19,15 +20,15 @@ namespace Menu.Application
         where TEntityModel : IEntityModel
         where TEntity : class, IEntity
     {
-        protected ApplicationBase(IMenuContext context)
+        protected ApplicationBase(IContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _erros = new List<string>();
             ResourceManager rm = new ResourceManager(typeof(EntitiesNames));
             _entityName = rm.GetString(nameof(TEntity));
         }
 
-        protected IMenuContext _context { get; set; }
+        protected IContext _context { get; set; }
         protected IEnumerable<string> _erros { get; set; }
         protected string _entityName { get; set; }
 
@@ -48,7 +49,10 @@ namespace Menu.Application
                 if (isValid)
                 {
                     TEntity entity = MapToEntity(model);
+                    entity.IncludedDate = DateTime.Now;
+
                     _context.Set<TEntity>().Add(entity);
+                    _context.SaveChanges();
                 }
                 else
                 {
@@ -59,8 +63,14 @@ namespace Menu.Application
 
         public virtual void Update(TEntityModel model)
         {
-
-            throw new NotImplementedException();
+            //if (model != null)
+            //{
+            //    //bool isValid = ValidateExistingEntity(model);
+            //    if (isValid)
+            //    {
+            //    }
+            //}
+            //throw new BusinessException(ErrorMessage.ValuesIsEmpty);
         }
 
         /// <summary>
@@ -74,9 +84,11 @@ namespace Menu.Application
                 var entity = _context.Set<TEntity>().Find(id);
                 if (entity == null)
                 {
-                    throw new ApplicationException();
+                    throw new BusinessException(string.Format(_entityName, ErrorMessage.NotFound, 404));
                 }
-                _context.Set<TEntity>().Remove(entity);
+                _context.Set<TEntity>().Update(entity);
+                entity.IsDeleted = true;
+                _context.SaveChanges();
             }
             catch (Exception)
             {
@@ -181,6 +193,25 @@ namespace Menu.Application
                 throw new MapperException(ErrorMessage.InvalidValueForMap);
             }
         }
+
+        ///// <summary>
+        ///// Validação base para entidades existêntes para ser atualizadas no banco, sobreescrever para validações especificas.
+        ///// </summary>
+        ///// <param name="object">Entidade a ser atualizada.</param>
+        ///// <returns>retorna o resultado da validação.</returns>
+        //public virtual bool ValidateExistingEntity(TEntityModel @object)
+        //{
+        //    try
+        //    {
+        //        var newEntity = MapToEntity(@object);
+        //        newEntity.Validate(_erros);
+        //        return _erros.Any();
+        //    }
+        //    catch (ApplicationException)
+        //    {
+        //        throw;
+        //    }
+        //}
 
         protected virtual TEntityModel MapToModel(TEntity entity)
         {
