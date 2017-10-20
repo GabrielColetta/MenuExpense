@@ -10,6 +10,7 @@ namespace Menu.Domain.Contracts.Application
         where TEntity : IEntity
     {
         void Create(TEntityModel model);
+        void Update(TEntityModel model);
         void Delete(long id);
         TEntityModel GetById(long id);
         TEntityModel GetById(long id, Expression<Func<TEntity, TEntityModel>> parameters);

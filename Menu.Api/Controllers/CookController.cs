@@ -73,6 +73,20 @@ namespace Menu.Api.Controllers
             }
         }
 
+        [HttpPut]
+        public IActionResult Update(CookModel model)
+        {
+            try
+            {
+                _cookApplication.Update(model);
+                return Ok();
+            }
+            catch (BusinessException ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
         [HttpDelete]
         public IActionResult Delete(long id)
         {

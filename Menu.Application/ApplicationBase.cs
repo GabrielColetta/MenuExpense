@@ -45,32 +45,30 @@ namespace Menu.Application
         {
             if (model != null)
             {
-                bool isValid = ValidateNewEntity(model);
-                if (isValid)
-                {
-                    TEntity entity = MapToEntity(model);
-                    entity.IncludedDate = DateTime.Now;
+                TEntity entity = ValidateEntity(model);
+                entity.IncludedDate = DateTime.Now;
 
-                    _context.Set<TEntity>().Add(entity);
-                    _context.SaveChanges();
-                }
-                else
-                {
-                    throw new BusinessException(string.Format(_entityName, ErrorMessage.NotValid));
-                }
+                _context.Set<TEntity>().Add(entity);
+                _context.SaveChanges();
             }
         }
 
+        /// <summary>
+        /// Método base para atualização de uma entidade existente.
+        /// </summary>
+        /// <param name="model">Modelo para atualizar uma entidade existente.</param>
         public virtual void Update(TEntityModel model)
         {
-            //if (model != null)
-            //{
-            //    //bool isValid = ValidateExistingEntity(model);
-            //    if (isValid)
-            //    {
-            //    }
-            //}
-            //throw new BusinessException(ErrorMessage.ValuesIsEmpty);
+            if (model != null)
+            {
+                var entity = _context.Set<TEntity>().Find(model.Id);
+                TEntity changedEntity = ValidateEntity(model);
+
+                entity = changedEntity;
+                _context.Set<TEntity>().Update(entity);
+                _context.SaveChanges();
+            }
+            throw new BusinessException(ErrorMessage.ValuesIsEmpty);
         }
 
         /// <summary>
@@ -165,13 +163,13 @@ namespace Menu.Application
         public virtual IEnumerable<TEntityModel> GetPaginated(int page, Expression<Func<TEntity, TEntityModel>> parameters)
         {
             int index = page * 12;
-            ICollection<TEntityModel> result = 
+            ICollection<TEntityModel> result =
                 _context.Set<TEntity>()
                 .Skip(index)
                 .Take(12)
                 .Select(parameters)
                 .ToList();
-            
+
             return result;
         }
 
@@ -180,38 +178,23 @@ namespace Menu.Application
         /// </summary>
         /// <param name="object">objeto a ser inserido.</param>
         /// <returns>retorna o resultado da validação.</returns>
-        protected virtual bool ValidateNewEntity(TEntityModel @object)
+        protected virtual TEntity ValidateEntity(TEntityModel @object)
         {
             try
             {
                 var newEntity = MapToEntity(@object);
                 newEntity.Validate(_erros);
-                return _erros.Any();
+                if (_erros.Any())
+                {
+                    throw new BusinessException(string.Format(_entityName, ErrorMessage.NotValid));
+                }
+                return newEntity;
             }
             catch (Exception)
             {
                 throw new MapperException(ErrorMessage.InvalidValueForMap);
             }
         }
-
-        ///// <summary>
-        ///// Validação base para entidades existêntes para ser atualizadas no banco, sobreescrever para validações especificas.
-        ///// </summary>
-        ///// <param name="object">Entidade a ser atualizada.</param>
-        ///// <returns>retorna o resultado da validação.</returns>
-        //public virtual bool ValidateExistingEntity(TEntityModel @object)
-        //{
-        //    try
-        //    {
-        //        var newEntity = MapToEntity(@object);
-        //        newEntity.Validate(_erros);
-        //        return _erros.Any();
-        //    }
-        //    catch (ApplicationException)
-        //    {
-        //        throw;
-        //    }
-        //}
 
         protected virtual TEntityModel MapToModel(TEntity entity)
         {
